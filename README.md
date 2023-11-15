@@ -1,13 +1,18 @@
-## Getting Started
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+# SpeedPay 
 
-## Folder Structure
+O SpeedPay é um sistema de automatização de pagamento de salário de funcionários de uma empresa. O sistema lê a planilha excel que contém os dados relevantes ao pagamento do salário (Nome, Salário e Chave Pix) e efetua o pagamento de forma automática. O usuário só precisa clicar um botão para carregar o arquivo e depois outro botão para executar a leitura da planilha e o pagamento, em vez de pagar cada funcionário um por um.
 
-The workspace contains two folders by default, where:
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+## Pre-Requisitos
+
+O software é um aplicativo Desktop, para instalar, só precisa ter um Desktop
+
+
+# Instalação
+
+A instalação será feita por membros da nossa equipe que irão até o local, e vários testes serão condutos para assegurar o funcionamento do sistema no computador da empresa
+
 
 Meanwhile, the compiled output files will be generated in the `bin` folder by default.
 
@@ -15,4 +20,4 @@ Meanwhile, the compiled output files will be generated in the `bin` folder by de
 
 ## Dependency Management
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+Estamos usando a biblioteca Apache POI para manipular planilhas
