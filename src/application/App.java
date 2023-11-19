@@ -3,6 +3,7 @@ package application;
 import java.io.IOException;
 
 import application.controller.MainScreen;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,6 +15,7 @@ public class App extends Application {
         launch(args);
     }
 
+    // Inicialização da interface gráfica
     @Override
     public void start(Stage primaryStage) throws Exception {
         try {
