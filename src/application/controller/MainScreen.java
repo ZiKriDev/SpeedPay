@@ -12,26 +12,18 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-
-import application.entities.screens.buttons.ImportSpreadsheet;
+import application.entities.screens.logic.buttons.ImportSpreadsheet;
 
 public class MainScreen {
 
-    String spreadsheetFilePath;
+    private String spreadsheetFilePath;
 
     @FXML
     private ListView<String> employeeListView;
+
+    @FXML
+    private ListView<Double> salaryListView;
 
     @FXML
     private Label errorMessage;
@@ -68,9 +60,13 @@ public class MainScreen {
             errorMessage.setAlignment(Pos.CENTER);
             errorMessage.setText("É necessário importar um arquivo!");
 
+            return;
+
         } else if (!ImportSpreadsheet.isSpreadsheet(spreadsheetFilePath)) {
             errorMessage.setAlignment(Pos.CENTER);
             errorMessage.setText("O formato do arquivo deve ser planilha!");
+
+            return;
         } else {
             errorMessage.setAlignment(Pos.CENTER);
             errorMessage.setText("");
@@ -78,8 +74,24 @@ public class MainScreen {
             if (!(ImportSpreadsheet.countSpreadsheet(spreadsheetFilePath) > 0)) {
                 errorMessage.setAlignment(Pos.CENTER);
                 errorMessage.setText("O seu arquivo deve conter apenas uma planilha!");
+
+                return;
             } else {
-                readAndPrintDataInSpreadsheet(spreadsheetFilePath);
+                ImportSpreadsheet.printDataToListView(spreadsheetFilePath);
+
+                if (ImportSpreadsheet.getErrorMessage() != null) {
+                    errorMessage.setAlignment(Pos.CENTER);
+                    errorMessage.setText(ImportSpreadsheet.getErrorMessage());
+                    
+                    return;
+                } else {
+                    errorMessage.setAlignment(Pos.CENTER);
+                    errorMessage.setText("");
+                    
+                    employeeListView.getItems().addAll(ImportSpreadsheet.getEmployeesList());
+                    salaryListView.getItems().addAll(ImportSpreadsheet.getSalaryList());
+                    // Continuar implementando lógica do botão aqui
+                }
             }
         }
     }
@@ -96,69 +108,6 @@ public class MainScreen {
 
             pathFile.setText(spreadsheetFilePath);
         }
-    }
-
-    // Ler os dados da planilha e mostrar como preview na tela como List View
-    public void readAndPrintDataInSpreadsheet(String filePath) {
-        try {
-            Workbook workbook = WorkbookFactory.create(new FileInputStream(filePath));
-            Sheet sheet = workbook.getSheetAt(0);
-
-            int employeeColumn = searchColumn(sheet, "Funcionários");
-
-            if (employeeColumn == -1) {
-                errorMessage.setAlignment(Pos.CENTER);
-                errorMessage.setText("Coluna \"Funcionários\" não encontrada na planilha!");
-                return;
-            }
-
-            List<String> employees = getEmployees(sheet, employeeColumn);
-            employeeListView.getItems().addAll(employees);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Retorna o índice da coluna a partir do nome dela
-    private int searchColumn(Sheet sheet, String columnName) {
-        Row headerRow = sheet.getRow(2);
-
-        if (headerRow != null) {
-            Iterator<Cell> cellIterator = headerRow.cellIterator();
-
-            while (cellIterator.hasNext()) {
-                Cell cell = cellIterator.next();
-                if (cell.getStringCellValue().equalsIgnoreCase(columnName)) {
-                    return cell.getColumnIndex();
-                }
-            }
-
-        }
-
-        return -1;
-    }
-
-    // Obtêm os dados da coluna de Funcionários
-    private List<String> getEmployees(Sheet sheet, int employeeColumn) {
-        List<String> employees = new ArrayList<>();
-
-        Iterator<Row> rowIterator = sheet.iterator();
-
-        rowIterator.next();
-        rowIterator.next();
-        rowIterator.next();
-
-        while (rowIterator.hasNext()) {
-            Row row = rowIterator.next();
-            Cell cell = row.getCell(employeeColumn);
-
-            if (cell != null) {
-                employees.add(cell.getStringCellValue());
-            }
-        }
-
-        return employees;
     }
 
 }
