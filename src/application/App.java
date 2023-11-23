@@ -2,13 +2,14 @@ package application;
 
 import java.io.IOException;
 
-import application.controller.MainScreen;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import application.controller.MainScreen;
+import application.controller.Screen;
 
 public class App extends Application {
     public static void main(String[] args) throws Exception {
@@ -22,10 +23,10 @@ public class App extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/application/controller/MainScreen.fxml"));
             Parent root = fxmlLoader.load();
 
-            MainScreen mainScreenController = fxmlLoader.getController();
-            mainScreenController.setPrimaryStage(primaryStage);
+            MainScreen mainScreen = fxmlLoader.getController();
+            mainScreen.setScreen(new Screen(primaryStage));
 
-            Scene screen = new Scene(root);
+            Scene screen = new Scene(root, 600, 400);
 
             primaryStage.setTitle("SpeedPay");
             primaryStage.setScene(screen);
@@ -34,6 +35,5 @@ public class App extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

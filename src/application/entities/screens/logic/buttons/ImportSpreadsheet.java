@@ -134,7 +134,8 @@ public class ImportSpreadsheet {
         return -1;
     }
 
-    // Imprimir os dados da planilha obtidos pelos métodos auxiliares 'searchColumn()', 
+    // Imprimir os dados da planilha obtidos pelos métodos auxiliares
+    // 'searchColumn()',
     // 'getEmployees()' e 'getSalary()' na tela em List View
     public static void printDataToListView(String filePath) {
         try {
@@ -145,7 +146,7 @@ public class ImportSpreadsheet {
 
             if (employeeColumn == -1) {
                 errorMessage = "Coluna \"Funcionários\" não encontrada na planilha!";
-                
+
                 return;
             }
 
@@ -155,10 +156,10 @@ public class ImportSpreadsheet {
 
             if (salaryColumn == -1) {
                 errorMessage = "Coluna \"Funcionários\" não encontrada na planilha!";
-                
+
                 return;
             }
-            
+
             salary = getSalaryInSpreadsheet(sheet, salaryColumn);
 
         } catch (IOException e) {
