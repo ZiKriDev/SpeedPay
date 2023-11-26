@@ -19,11 +19,11 @@ public class Screen {
     }
 
     public void showMainScreen() {
-        showScreen("/application/controller/MainScreen.fxml", TITLE);
+        showScreen("/application/resources/screen/MainScreen.fxml", TITLE);
     }
 
     public void showImportSpreadsheetScreen() {
-        showScreen("/application/controller/ImportSpreadsheetScreen.fxml", TITLE);
+        showScreen("/application/resources/screen/ImportSpreadsheetScreen.fxml", TITLE);
     }
 
     public Stage getStage() {

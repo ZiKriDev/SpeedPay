@@ -9,8 +9,9 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -23,6 +24,8 @@ import application.entities.screens.logic.buttons.ImportSpreadsheet;
 public class ImportSpreadsheetScreen extends Base {
 
     private String spreadsheetFilePath;
+
+    private Screen screen;
 
     @FXML
     private ListView<String> employeeListView;
@@ -37,15 +40,25 @@ public class ImportSpreadsheetScreen extends Base {
     private Button importSpreadsheet;
 
     @FXML
-    private MenuBar menuBar;
-
-    @FXML
     private TextField pathFile;
 
     @FXML
     private Button selectFile;
 
+    @FXML
+    private ImageView switchToImportSpreadsheetScreen;
+
+    @FXML
+    private ImageView switchToMainScreen;
+
     private Stage stage;
+
+    public ImportSpreadsheetScreen() {
+    }
+
+    public ImportSpreadsheetScreen(Screen screen) {
+        this.screen = screen;
+    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -53,8 +66,21 @@ public class ImportSpreadsheetScreen extends Base {
 
     @FXML
     private void initialize() {
+        switchToMainScreen.setOnMouseClicked((event -> getScreen().showMainScreen()));
+        switchToImportSpreadsheetScreen.setOnMouseClicked((event -> getScreen().showImportSpreadsheetScreen()));
+        
         selectFile.setOnAction(event -> openFileChooser());
         importSpreadsheet.setOnAction(this::onClickToImportSpreadsheet);
+    }
+
+    @FXML
+    void showMainScreen(MouseEvent event) {
+        screen.showMainScreen();
+    }
+    
+    @FXML
+    void showImportSpreadsheetScreen(MouseEvent event) {
+        screen.showImportSpreadsheetScreen();
     }
 
     @FXML

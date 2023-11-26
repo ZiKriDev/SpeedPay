@@ -1,18 +1,18 @@
 package application.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
 public class MainScreen extends Base {
 
     private Screen screen;
 
     @FXML
-    private Button switchToMainScreen;
+    private ImageView switchToMainScreen;
 
     @FXML
-    private Button switchToImportSpreadsheetScreen;
+    private ImageView switchToImportSpreadsheetScreen;
 
     public MainScreen() {
     }
@@ -23,17 +23,17 @@ public class MainScreen extends Base {
 
     @FXML
     private void initialize() {
-        switchToMainScreen.setOnAction(event -> getScreen().showMainScreen());
-        switchToImportSpreadsheetScreen.setOnAction(event -> getScreen().showImportSpreadsheetScreen());
+        switchToMainScreen.setOnMouseClicked((event -> getScreen().showMainScreen()));
+        switchToImportSpreadsheetScreen.setOnMouseClicked((event -> getScreen().showImportSpreadsheetScreen()));
     }
 
     @FXML
-    void showMainScreen(ActionEvent event) {
+    void showMainScreen(MouseEvent event) {
         screen.showMainScreen();
     }
-
+    
     @FXML
-    void showImportSpreadsheetScreen(ActionEvent event) {
+    void showImportSpreadsheetScreen(MouseEvent event) {
         screen.showImportSpreadsheetScreen();
     }
 }

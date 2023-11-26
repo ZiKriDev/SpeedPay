@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.MainScreen">
+  <children>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" style="-fx-border-color: #f5f6f7;" VBox.vgrow="ALWAYS">
+      <children>
+            <ImageView fitHeight="400.0" fitWidth="138.0" layoutY="2.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../images/MenuBackground.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="switchToMainScreen" fitHeight="25.0" fitWidth="28.0" layoutX="23.0" layoutY="56.0" onMouseClicked="#showMainScreen" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/HouseIcon.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="switchToImportSpreadsheetScreen" fitHeight="34.0" fitWidth="37.0" layoutX="19.0" layoutY="104.0" onMouseClicked="#showImportSpreadsheetScreen" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/ImportSpreadsheetIcon.png" />
+               </image>
+            </ImageView>
+      </children>
+    </AnchorPane>
+  </children>
+</VBox>
