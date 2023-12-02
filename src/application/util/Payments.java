@@ -10,8 +10,7 @@ import java.util.Map;
 public class Payments {
 
     public void doPayments() {
-        // Configure sua chave secreta da API Stripe
-        Stripe.apiKey = "sk_test_51OEXhaHKcARfOPFO8e287zClHqWhsM7nSGR0dT3cQVJn0J9VLg5cIuvI3tczMvdtazczUh30kXG7HSoZnfsSxpTG00IFa2qCGo";
+        Stripe.apiKey = "sk_test_51ODogtFdq6idqxEosFWWNEqlz5z4VRz7DZDRkih0olgbfhxrsqkHQqb3JgwJaBuh9tG18lTTu51Qw4yrFK4Kwttb00JquhFLSG";
 
         try {
             // Crie um mapa com os parâmetros necessários para o pagamento (payout)

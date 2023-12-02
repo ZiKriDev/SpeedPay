@@ -3,9 +3,15 @@ package application.entities.screens.logic.buttons;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -13,11 +19,15 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import application.entities.Employee;
+import db.DB;
+
 public class ImportSpreadsheet {
 
-    private static String errorMessage;
-    private static List<String> employees;
+    private static String message;
+    private static List<String> employeesName;
     private static List<Double> salary;
+    private static List<String> idAccount;
 
     // Valida se o caminho para o arquivo é diferente de nulo ou vazio
     public static boolean existsFilePath(String filePath) {
@@ -115,6 +125,28 @@ public class ImportSpreadsheet {
         return employees;
     }
 
+    // Obtêm os dados da coluna de Chave Pix da planilha
+    public static List<String> getIdAccountInSpreadsheet(Sheet sheet, int idAccountColumn) {
+        List<String> idAccount = new ArrayList<>();
+
+        Iterator<Row> rowIterator = sheet.iterator();
+
+        rowIterator.next();
+        rowIterator.next();
+        rowIterator.next();
+
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            Cell cell = row.getCell(idAccountColumn);
+
+            if (cell != null) {
+                idAccount.add(cell.getStringCellValue());
+            }
+        }
+
+        return idAccount;
+    }
+
     // Retorna o índice da coluna a partir do nome dela
     public static int searchColumn(Sheet sheet, String columnName) {
         Row headerRow = sheet.getRow(2);
@@ -145,37 +177,173 @@ public class ImportSpreadsheet {
             int employeeColumn = searchColumn(sheet, "Funcionários");
 
             if (employeeColumn == -1) {
-                errorMessage = "Coluna \"Funcionários\" não encontrada na planilha!";
+                message = "Coluna \"Funcionários\" não encontrada na planilha!";
 
                 return;
             }
 
-            employees = getEmployeesInSpreadsheet(sheet, employeeColumn);
+            employeesName = getEmployeesInSpreadsheet(sheet, employeeColumn);
 
             int salaryColumn = searchColumn(sheet, "Salário Líquido");
 
             if (salaryColumn == -1) {
-                errorMessage = "Coluna \"Funcionários\" não encontrada na planilha!";
+                message = "Coluna \"Funcionários\" não encontrada na planilha!";
 
                 return;
             }
 
             salary = getSalaryInSpreadsheet(sheet, salaryColumn);
 
+            int idAccountColumn = searchColumn(sheet, "Chave Pix");
+
+            if (idAccountColumn == -1) {
+                message = "Coluna \"Chave Pix\" não encontrada na planilha!";
+
+                return;
+            }
+
+            idAccount = getIdAccountInSpreadsheet(sheet, idAccountColumn);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static List<String> getEmployeesList() {
+    // Pegar dados de todos os funcionários cadastrados no banco de dados
+    private static List<Employee> getCurrentDataFromDatabase() {
+        List<String> employeesName = new ArrayList<>();
+        List<String> idAccount = new ArrayList<>();
+        List<Double> salary = new ArrayList<>();
+
+        List<Employee> employees = new ArrayList<>();
+
+        int cont = 0;
+
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DB.getConnection();
+
+            st = conn.createStatement();
+
+            rs = st.executeQuery("select * from employees");
+
+            while (rs.next()) {
+                employeesName.add(cont, rs.getString("name"));
+                idAccount.add(cont, rs.getString("id_account"));
+                salary.add(cont, rs.getDouble("salary"));
+
+                cont++;
+            }
+
+            for (int i = 0; i < employeesName.size(); i++) {
+                Employee emp = new Employee(employeesName.get(i), idAccount.get(i), salary.get(i));
+
+                employees.add(emp);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeResultSet(rs);
+            DB.closeStatement(st);
+        }
+
         return employees;
     }
 
+    // Verifica se existe algum dado igual ao que se encontra no banco de dados e,
+    // em seguida, armazena os dados que não existem no banco de dados
+    public static void setDataInDatabase() {
+        List<Employee> currentDataInDb = getCurrentDataFromDatabase();
+        List<Employee> employees = new ArrayList<>();
+
+        Connection conn = null;
+        PreparedStatement st = null;
+
+        try {
+            List<String> employeesName = getEmployeesNameList();
+            List<Double> employeesSalary = getSalaryList();
+            List<String> employeesIdAccount = getIdAccountList();
+
+            for (int i = 0; i < employeesName.size(); i++) {
+                Employee emp = new Employee(employeesName.get(i), employeesIdAccount.get(i),
+                        employeesSalary.get(i));
+                employees.add(emp);
+            }
+
+            checkAndRemoveDuplicateData(employees, currentDataInDb);
+
+            if (employees.size() != 0) {
+                conn = DB.getConnection();
+
+                st = conn.prepareStatement(
+                        "INSERT INTO employees "
+                                + "(name, id_account, salary) "
+                                + "VALUES "
+                                + "(?, ?, ?)");
+
+                for (int i = 0; i < employees.size(); i++) {
+                    st.setString(1, employees.get(i).getName());
+                    st.setString(2, employees.get(i).getIdAccount());
+                    st.setDouble(3, employees.get(i).getSalary());
+
+                    st.executeUpdate();
+                }
+
+                message = "Funcionários cadastrados com sucesso!";
+
+            } else {
+                message = "Os funcionários dessa planilha já estão cadastrados!";
+
+                return;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeStatement(st);
+            DB.closeConnection();
+        }
+
+    }
+
+    // Checar se existe algum elemento da list1 que é igual a list2. Se houver, remove o elemento da list1
+    private static void checkAndRemoveDuplicateData(List<Employee> list1, List<Employee> list2) {
+        Iterator<Employee> iterator = list1.iterator();
+        List<Employee> currentDataInDb = getCurrentDataFromDatabase();
+
+        while (iterator.hasNext()) {
+            Employee emp = iterator.next();
+
+            if (list2.contains(emp) || currentDataInDb.contains(emp)) {
+                iterator.remove();
+            }
+        }
+    }
+
+    public static List<String> getEmployeesNameList() {
+        return employeesName;
+    }
+
     public static List<Double> getSalaryList() {
+        Locale.setDefault(Locale.US);
+
+        for (int i = 0; i < salary.size(); i++) {
+            String formattedSalaryValue = String.format("%.2f", salary.get(i));
+
+            double formattedSalary = Double.parseDouble(formattedSalaryValue);
+
+            salary.set(i, formattedSalary);
+        }
+
         return salary;
     }
 
-    public static String getErrorMessage() {
-        return errorMessage;
+    public static List<String> getIdAccountList() {
+        return idAccount;
+    }
+
+    public static String getMessage() {
+        return message;
     }
 }
