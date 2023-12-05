@@ -2,33 +2,58 @@ package application.util;
 
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Payout;
+import com.stripe.model.PaymentIntent;
+
+import application.entities.Employee;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Payments {
 
-    public void doPayments() {
-        Stripe.apiKey = "sk_test_51ODogtFdq6idqxEosFWWNEqlz5z4VRz7DZDRkih0olgbfhxrsqkHQqb3JgwJaBuh9tG18lTTu51Qw4yrFK4Kwttb00JquhFLSG";
+    private String message;
+    private String paidEmployees;
 
-        try {
-            // Crie um mapa com os parâmetros necessários para o pagamento (payout)
-            Map<String, Object> payoutParams = new HashMap<>();
-            payoutParams.put("amount", 1000); // Valor em centavos (ex: R$ 10,00)
-            payoutParams.put("currency", "brl"); // Moeda
-            payoutParams.put("destination", "ba_123456789"); // ID da conta bancária destinatária
+    public void doPayments(List<Employee> selectedEmployees) {
 
-            // Crie o pagamento (payout) simulado
-            Payout payout = Payout.create(payoutParams);
+        Stripe.apiKey = "sk_test_51OEXhaHKcARfOPFO8e287zClHqWhsM7nSGR0dT3cQVJn0J9VLg5cIuvI3tczMvdtazczUh30kXG7HSoZnfsSxpTG00IFa2qCGo";
 
-            // Aqui você pode usar o payout.getId() para rastrear o pagamento, se
-            // necessário.
+        for (Employee emp : selectedEmployees) {
+            String customerId = emp.getIdAccount();
 
-            System.out.println("Pagamento simulado para conta bancária criado com sucesso. ID do pagamento: " + payout.getId());
-        } catch (StripeException e) {
-            // Lida com exceções da Stripe
-            e.printStackTrace();
+            double s = emp.getSalary() * 100;
+            int salary = (int) s;
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("amount", salary); // Valor em centavos 
+            params.put("currency", "brl");
+            params.put("payment_method", "pm_card_visa"); // Cartão de teste
+            params.put("customer", customerId); // ID da conta
+            params.put("confirmation_method", "manual");
+
+            try {
+                PaymentIntent paymentIntent = PaymentIntent.create(params);
+
+                String paymentStatus = paymentIntent.getStatus();   
+                
+                if (paymentStatus.equals("requires_confirmation")) {
+                    message = "Pagamento realizado com sucesso!";
+                } else {
+                    message = "Erro ao executar um pagamento! Verifique o painel da conta Stripe!";
+                }
+            } catch (StripeException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getPaidEmployees() {
+        return paidEmployees;
+    }
 }
+

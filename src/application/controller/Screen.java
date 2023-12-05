@@ -22,6 +22,24 @@ public class Screen {
         showScreen("/application/resources/screen/MainScreen.fxml", TITLE);
     }
 
+    public void showPayoutScreen() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(
+                    getClass().getResource("/application/resources/screen/PayoutScreen.fxml"));
+            Parent root = fxmlLoader.load();
+
+            PayoutScreen payoutScreenController = fxmlLoader.getController();
+            payoutScreenController.setScreen(this);
+            payoutScreenController.loadDatafromDatabase();
+
+            PRIMARY_STAGE.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT));
+            PRIMARY_STAGE.setTitle(TITLE);
+            PRIMARY_STAGE.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void showImportSpreadsheetScreen() {
         showScreen("/application/resources/screen/ImportSpreadsheetScreen.fxml", TITLE);
     }
@@ -40,6 +58,10 @@ public class Screen {
 
             PRIMARY_STAGE.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT));
             PRIMARY_STAGE.setTitle(title);
+
+            PRIMARY_STAGE.setResizable(false);
+            PRIMARY_STAGE.setMaximized(false);
+
             PRIMARY_STAGE.show();
         } catch (IOException e) {
             e.printStackTrace();

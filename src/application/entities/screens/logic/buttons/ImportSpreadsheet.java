@@ -168,7 +168,8 @@ public class ImportSpreadsheet {
 
     // Imprimir os dados da planilha obtidos pelos métodos auxiliares
     // 'searchColumn()',
-    // 'getEmployees()' e 'getSalary()' na tela em List View
+    // 'getEmployeesInSpreadsheet()', 'getSalaryInSpreadsheet()' e 'getIdAccountInSpreadsheet()' 
+    // na tela em List View
     public static void printDataToListView(String filePath) {
         try {
             Workbook workbook = WorkbookFactory.create(new FileInputStream(filePath));
@@ -209,7 +210,7 @@ public class ImportSpreadsheet {
     }
 
     // Pegar dados de todos os funcionários cadastrados no banco de dados
-    private static List<Employee> getCurrentDataFromDatabase() {
+    public static List<Employee> getCurrentDataFromDatabase() {
         List<String> employeesName = new ArrayList<>();
         List<String> idAccount = new ArrayList<>();
         List<Double> salary = new ArrayList<>();
@@ -302,7 +303,6 @@ public class ImportSpreadsheet {
             e.printStackTrace();
         } finally {
             DB.closeStatement(st);
-            DB.closeConnection();
         }
 
     }
@@ -321,10 +321,12 @@ public class ImportSpreadsheet {
         }
     }
 
+    // Pegar lista de nomes dos funcionários a serem cadastrados
     public static List<String> getEmployeesNameList() {
         return employeesName;
     }
 
+    // Pegar lista de salários dos funcionários a serem cadastrados
     public static List<Double> getSalaryList() {
         Locale.setDefault(Locale.US);
 
@@ -339,10 +341,12 @@ public class ImportSpreadsheet {
         return salary;
     }
 
+    // Pegar lista de ID da conta dos funcionários a serem cadastrados
     public static List<String> getIdAccountList() {
         return idAccount;
     }
 
+    // Pegar mensagem
     public static String getMessage() {
         return message;
     }

@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -32,6 +33,9 @@ public class ImportSpreadsheetScreen extends Base {
     private boolean isPressedDialogPaneOkButton;
 
     private Screen screen;
+
+    @FXML
+    private VBox mainVBox;
 
     @FXML
     private ListView<String> employeeListView;
@@ -60,6 +64,9 @@ public class ImportSpreadsheetScreen extends Base {
     @FXML
     private ImageView switchToMainScreen;
 
+    @FXML
+    private ImageView switchToPayoutScreen;
+
     private Stage stage;
 
     public ImportSpreadsheetScreen() {
@@ -69,29 +76,46 @@ public class ImportSpreadsheetScreen extends Base {
         this.screen = screen;
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
+    // Método chamado pelo JavaFX para realizar inicializações
+    // e configurações iniciais da interface gráfica, permitindo
+    // o carregamento dos componentes gráficos antes da lógica dos mesmos
     @FXML
     private void initialize() {
         switchToMainScreen.setOnMouseClicked((event -> getScreen().showMainScreen()));
         switchToImportSpreadsheetScreen.setOnMouseClicked((event -> getScreen().showImportSpreadsheetScreen()));
+        switchToPayoutScreen.setOnMouseClicked((event -> getScreen().showPayoutScreen()));
+
+        VBox.setVgrow(mainVBox, Priority.ALWAYS);
 
         selectFile.setOnAction(event -> openFileChooser());
         importSpreadsheet.setOnAction(this::onClickToImportSpreadsheet);
     }
 
+    // Método que é disparado quando o usuário clica no ImageView referente
+    // a tela principal. Executa o método da classe Screen
+    // para mostrar a tela principal da aplicação
     @FXML
     void showMainScreen(MouseEvent event) {
         screen.showMainScreen();
     }
 
+    // Método que é disparado quando o usuário clica no ImageView referente
+    // a tela de importar planilha. Executa o método da classe Screen
+    // para mostrar a tela de importar planilha.
     @FXML
     void showImportSpreadsheetScreen(MouseEvent event) {
         screen.showImportSpreadsheetScreen();
     }
 
+    // Método que é disparado quando o usuário clica no ImageView referente
+    // a tela de pagamentos. Executa o método da classe Screen
+    // para mostrar a tela de pagamentos.
+    @FXML
+    void showPayoutScreen(MouseEvent event) {
+        screen.showPayoutScreen();
+    }
+
+    // Método que é disparado quando o botão de importar planilha é acionado.
     @FXML
     void onClickToImportSpreadsheet(ActionEvent event) {
         boolean validFile = ImportSpreadsheet.existsFilePath(spreadsheetFilePath);
@@ -126,16 +150,20 @@ public class ImportSpreadsheetScreen extends Base {
         }
     }
 
+    // Mostrar texto do Label de mensagem
     private void showMessage(String messageText) {
         message.setAlignment(Pos.CENTER);
         message.setText(messageText);
     }
 
+    // Limpar texto do Label de mensagem
     private void clearMessage() {
         message.setAlignment(Pos.CENTER);
         message.setText("");
     }
 
+    // Mensagem retornada quando os dados da planilha são cadastrados no banco de dados
+    // com sucesso ou não
     private void handleDatabaseMessage() {
         String importMessage = ImportSpreadsheet.getMessage();
     
@@ -154,6 +182,7 @@ public class ImportSpreadsheetScreen extends Base {
         }
     }
 
+    // Acionar o File Chooser (escolher arquivo)
     private void openFileChooser() {
         FileChooser fileChooser = new FileChooser();
 
@@ -170,13 +199,16 @@ public class ImportSpreadsheetScreen extends Base {
         }
     }
 
+    // Mostrar Dialog Pane com os dados extraídos da planilha
+    // para o usuário confirmar o cadastro dos funcionários no
+    // banco de dados
     private void showDialogPane() {
         employeeListView.setVisible(true);
         salaryListView.setVisible(true);
         idAccountListView.setVisible(true);
 
         Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Visualização da planilha");
+        dialog.setTitle("Tem certeza que deseja cadastrar?");
 
         DialogPane dialogPane = new DialogPane();
 

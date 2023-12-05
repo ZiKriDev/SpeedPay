@@ -3,13 +3,15 @@ package application;
 import java.io.IOException;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
+import javafx.stage.WindowEvent;
 import application.controller.MainScreen;
 import application.controller.Screen;
+import db.DB;
 
 public class App extends Application {
     public static void main(String[] args) throws Exception {
@@ -28,8 +30,18 @@ public class App extends Application {
 
             Scene screen = new Scene(root, 600, 400);
 
+            primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>(){
+                @Override
+                public void handle(WindowEvent event) {
+                    DB.closeConnection();
+                }
+            });
+
             primaryStage.setTitle("SpeedPay");
             primaryStage.setScene(screen);
+
+            primaryStage.setResizable(false);
+            primaryStage.setMaximized(false);
 
             primaryStage.show();
         } catch (IOException e) {

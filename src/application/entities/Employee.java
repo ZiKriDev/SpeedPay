@@ -1,5 +1,7 @@
 package application.entities;
 
+import javafx.beans.property.SimpleStringProperty;
+
 public class Employee {
 
     private String name;
@@ -36,6 +38,17 @@ public class Employee {
         this.salary = salary;
     }
 
+    public SimpleStringProperty nameProperty() {
+        return new SimpleStringProperty(name);
+    }
+
+    public SimpleStringProperty salaryProperty() {
+        return new SimpleStringProperty(String.format("%.2f", salary));
+    }
+
+    // Método auxiliar para comparar os objetos com base
+    // nos atributos 'nome' e 'id da conta' para posterior
+    // verificação no banco de dados
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
