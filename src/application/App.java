@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import application.controller.MainScreen;
@@ -42,6 +43,8 @@ public class App extends Application {
 
             primaryStage.setResizable(false);
             primaryStage.setMaximized(false);
+
+            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/application/resources/images/iconapp.png")));
 
             primaryStage.show();
         } catch (IOException e) {

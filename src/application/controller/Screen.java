@@ -5,6 +5,7 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class Screen {
@@ -61,6 +62,8 @@ public class Screen {
 
             PRIMARY_STAGE.setResizable(false);
             PRIMARY_STAGE.setMaximized(false);
+
+            PRIMARY_STAGE.getIcons().add(new Image(getClass().getResourceAsStream("/application/resources/images/iconapp.png")));
 
             PRIMARY_STAGE.show();
         } catch (IOException e) {
