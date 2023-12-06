@@ -23,7 +23,7 @@ Instalando o **[JDK 17 ou superior](https://www.azul.com/downloads/?package=jdk#
 - Após a instalação, abra o prompt de comandos e digite o comando "java –version" para verificar 
 se o Java instalado se encontra no caminho. Caso isto não aconteça, crie uma variável de sistema de 
 nome JAVA_HOME, especificando o caminho até o JDK. No Windows, o JDK se encontra dentro da pasta 
-Java em Arquivos de Programas.
+Java em "Arquivos de Programas".
 ```
 Instalando o **[MySQL Server](https://dev.mysql.com/downloads/installer/)**:
 
@@ -40,9 +40,9 @@ Criando o **[banco de dados](http://twixar.me/LR6m)**:
 ```
 - Faça o download do script SQL.
 
-- No MySQL Workbench, selecione "File", e em seguida "Open SQL Script". Selecione o script SQL.
+- No MySQL Workbench, selecione "File", e em seguida "Open SQL Script". Selecione o script SQL e o execute.
 ```
-Download da **[aplicação](https://www.mediafire.com/file/6yacy72k0ekr2wq/SpeedPay.rar/file)**:
+Download da **[aplicação](https://www.mediafire.com/file/nun7xinsxpzb464/SpeedPay.rar/file)**:
 
 ```
 - Faça o download da pasta da aplicação. No Windows, é recomendável que a pasta seja extraída em 
@@ -57,8 +57,8 @@ Clique em SpeedPay.exe para executar o programa.
 
 * [JavaFX](https://openjfx.io/) - Framework usado para a interface gráfica
 * [Apache POI](https://poi.apache.org/) - API para lidar com planilhas Excel
-* [JDBC Connector](https://www.mysql.com/products/connector/) - Usado para interagir com banco de dados
-* [Stripe](https://stripe.com/docs/api) - API para lidar com processamento de pagamentos da plataforma Stripe
+* [JDBC Connector](https://www.mysql.com/products/connector/) - Utilizado para interagir com o banco de dados
+* [Stripe](https://stripe.com/docs/api) - API para lidar com processamento de pagamentos na plataforma Stripe
 
 ## ✒️ Autores
 
