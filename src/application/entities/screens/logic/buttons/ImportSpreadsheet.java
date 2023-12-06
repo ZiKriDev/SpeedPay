@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -71,12 +72,11 @@ public class ImportSpreadsheet {
     }
 
     // Verifica quantas planilhas existem no arquivo
-    public static int countSpreadsheet(String filePath) {
+    public static int countSpreadsheet(String filePath) throws InvalidFormatException {
         try (Workbook workbook = WorkbookFactory.create(new FileInputStream(filePath))) {
             return workbook.getNumberOfSheets();
         } catch (IOException e) {
             e.printStackTrace();
-
             return -1;
         }
     }

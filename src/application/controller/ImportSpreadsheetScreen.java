@@ -24,6 +24,8 @@ import javafx.util.Duration;
 import java.io.File;
 import java.util.Optional;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+
 import application.entities.screens.logic.buttons.ImportSpreadsheet;
 
 public class ImportSpreadsheetScreen extends Base {
@@ -118,35 +120,39 @@ public class ImportSpreadsheetScreen extends Base {
     // Método que é disparado quando o botão de importar planilha é acionado.
     @FXML
     void onClickToImportSpreadsheet(ActionEvent event) {
-        boolean validFile = ImportSpreadsheet.existsFilePath(spreadsheetFilePath);
-        boolean validSpreadsheet = validFile && ImportSpreadsheet.isSpreadsheet(spreadsheetFilePath);
-        boolean validRowCount = validSpreadsheet && ImportSpreadsheet.countSpreadsheet(spreadsheetFilePath) > 0;
+        try {
+            boolean validFile = ImportSpreadsheet.existsFilePath(spreadsheetFilePath);
+            boolean validSpreadsheet = validFile && ImportSpreadsheet.isSpreadsheet(spreadsheetFilePath);
+            boolean validRowCount = validSpreadsheet && ImportSpreadsheet.countSpreadsheet(spreadsheetFilePath) > 0;
     
-        if (!validFile) {
-            showMessage("É necessário importar um arquivo!");
-        } else if (!validSpreadsheet) {
-            showMessage("O formato do arquivo deve ser planilha!");
-        } else if (!validRowCount) {
-            showMessage("O seu arquivo deve conter apenas uma planilha!");
-        } else {
-            ImportSpreadsheet.printDataToListView(spreadsheetFilePath);
-    
-            if (ImportSpreadsheet.getMessage() != null) {
-                showMessage(ImportSpreadsheet.getMessage());
+            if (!validFile) {
+                showMessage("É necessário importar um arquivo!");
+            } else if (!validSpreadsheet) {
+                showMessage("O formato do arquivo deve ser planilha!");
+            } else if (!validRowCount) {
+                showMessage("O seu arquivo deve conter apenas uma planilha!");
             } else {
-                clearMessage();
+                ImportSpreadsheet.printDataToListView(spreadsheetFilePath);
     
-                employeeListView.getItems().addAll(ImportSpreadsheet.getEmployeesNameList());
-                salaryListView.getItems().addAll(ImportSpreadsheet.getSalaryList());
-                idAccountListView.getItems().addAll(ImportSpreadsheet.getIdAccountList());
+                if (ImportSpreadsheet.getMessage() != null) {
+                    showMessage(ImportSpreadsheet.getMessage());
+                } else {
+                    clearMessage();
     
-                showDialogPane();
+                    employeeListView.getItems().addAll(ImportSpreadsheet.getEmployeesNameList());
+                    salaryListView.getItems().addAll(ImportSpreadsheet.getSalaryList());
+                    idAccountListView.getItems().addAll(ImportSpreadsheet.getIdAccountList());
     
-                if (isPressedDialogPaneOkButton == true) {
-                    ImportSpreadsheet.setDataInDatabase();
-                    handleDatabaseMessage();
+                    showDialogPane();
+    
+                    if (isPressedDialogPaneOkButton == true) {
+                        ImportSpreadsheet.setDataInDatabase();
+                        handleDatabaseMessage();
+                    }
                 }
             }
+        } catch (InvalidFormatException e) {
+            e.printStackTrace();
         }
     }
 
