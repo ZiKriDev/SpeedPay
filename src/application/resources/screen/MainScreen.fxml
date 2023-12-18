@@ -1,60 +1,207 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="mainVBox" prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.MainScreen">
-  <children>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" style="-fx-border-color: #f5f6f7;" VBox.vgrow="ALWAYS">
-      <children>
-            <ImageView fitHeight="400.0" fitWidth="138.0" layoutY="2.0" pickOnBounds="true">
-               <image>
-                  <Image url="@../images/MenuBackground.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="switchToMainScreen" fitHeight="25.0" fitWidth="28.0" layoutX="23.0" layoutY="56.0" onMouseClicked="#showMainScreen" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/HouseIcon.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="switchToImportSpreadsheetScreen" fitHeight="34.0" fitWidth="37.0" layoutX="19.0" layoutY="104.0" onMouseClicked="#showImportSpreadsheetScreen" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/ImportSpreadsheetIcon.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="switchToPayoutScreen" fitHeight="64.0" fitWidth="34.0" layoutX="19.0" layoutY="158.0" onMouseClicked="#showPayoutScreen" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/PayoutIcon.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="284.0" layoutY="26.0" prefHeight="17.0" prefWidth="178.0" text="Bem vindo usuário!">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-            <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="198.0" layoutY="109.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/HouseIcon.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="switchToImportSpreadsheetScreen1" fitHeight="34.0" fitWidth="37.0" layoutX="194.0" layoutY="168.0" onMouseClicked="#showImportSpreadsheetScreen" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/ImportSpreadsheetIcon.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="switchToPayoutScreen1" fitHeight="64.0" fitWidth="34.0" layoutX="194.0" layoutY="232.0" onMouseClicked="#showPayoutScreen" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/PayoutIcon.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="244.0" layoutY="113.0" text="Clique nesse ícone para retornar até essa tela" />
-            <Label layoutX="244.0" layoutY="177.0" text="Clique nesse ícone para importar uma planilha" />
-            <Label layoutX="246.0" layoutY="241.0" text="Clique nesse ícone para realizar pagamentos" />
-      </children>
-    </AnchorPane>
-  </children>
-</VBox>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="632.0" prefWidth="981.0" style="-fx-background-color: #F4F4F4;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.MainScreen">
+   <children>
+      <AnchorPane prefHeight="632.0" prefWidth="285.0" style="-fx-background-color: #2C3E50;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox layoutY="157.0" prefHeight="475.0" prefWidth="285.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="157.0">
+               <children>
+                  <Button fx:id="switchToImportSpreadsheetScreen" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onAction="#showImportSpreadsheetScreen" prefHeight="64.0" prefWidth="285.0" styleClass="button1" stylesheets="@../../css/style.css" text="IMPORTAR" textFill="WHITE">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/ImportSpreadsheetIcon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Button>
+                  <Button fx:id="switchToEmployeeScreen" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onAction="#showEmployeeScreen" prefHeight="64.0" prefWidth="285.0" styleClass="button1" stylesheets="@../../css/style.css" text="FUNCIONÁRIOS" textFill="WHITE">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/EmployeeIcon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Button>
+                  <Button fx:id="switchToPayoutScreen" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onAction="#showPayoutScreen" prefHeight="64.0" prefWidth="285.0" styleClass="button1" stylesheets="@../../css/style.css" text="PAGAMENTOS" textFill="WHITE">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/PayoutIcon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Button>
+                  <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="285.0" styleClass="button1" stylesheets="@../../css/style.css" text="AJUDA" textFill="WHITE">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/HelpIcon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Button>
+               </children>
+            </VBox>
+            <Pane layoutY="79.0" prefHeight="64.0" prefWidth="288.0" style="-fx-background-color: #4B6987; -fx-background-radius: 5;">
+               <children>
+                  <Label layoutX="58.0" layoutY="19.0" text="INÍCIO" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="14.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/HouseIcon.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="288.0" prefHeight="632.0" prefWidth="693.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="288.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox layoutY="7.0" prefHeight="632.0" prefWidth="693.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="108.0" prefWidth="398.0">
+                     <children>
+                        <Label alignment="CENTER" text="Bem vindo, usuário!" textFill="#333333">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets bottom="40.0" left="250.0" top="40.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets right="200.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="44.0" prefWidth="693.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="33.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/HouseIconBlack.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="Dashboard" textFill="#333333">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets left="100.0" right="450.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="44.0" prefWidth="693.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="33.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/ImportSpreadsheetIconBlack.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="Cadastrar dados a partir de planilha" textFill="#333333">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets left="100.0" right="280.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="44.0" prefWidth="693.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="33.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/EmployeeIconBlack.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="Editar informações e remover funcionários" textFill="#333333">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets left="100.0" right="220.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER" layoutX="110.0" layoutY="274.0" prefHeight="44.0" prefWidth="693.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="33.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/PayoutIconBlack.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="Realizar pagamentos" textFill="#333333">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets left="100.0" right="380.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER" layoutX="110.0" layoutY="346.0" prefHeight="44.0" prefWidth="198.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="44.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/HelpIconBlack.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="Tela de ajuda" textFill="#333333">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets left="62.0" right="400.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

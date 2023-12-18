@@ -1,4 +1,4 @@
-package application.util;
+package application.service;
 
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -13,11 +13,11 @@ import java.util.Map;
 public class Payments {
 
     private String message;
-    private String paidEmployees;
 
+    // Realizando ordem de pagamento com a API Stripe
     public void doPayments(List<Employee> selectedEmployees) {
 
-        Stripe.apiKey = "sk_test_51OEXhaHKcARfOPFO8e287zClHqWhsM7nSGR0dT3cQVJn0J9VLg5cIuvI3tczMvdtazczUh30kXG7HSoZnfsSxpTG00IFa2qCGo";
+        Stripe.apiKey = "ADICIONE_SUA_CHAVE_AQUI";
 
         for (Employee emp : selectedEmployees) {
             String customerId = emp.getIdAccount();
@@ -35,7 +35,7 @@ public class Payments {
             try {
                 PaymentIntent paymentIntent = PaymentIntent.create(params);
 
-                String paymentStatus = paymentIntent.getStatus();   
+                String paymentStatus = paymentIntent.getStatus();
                 
                 if (paymentStatus.equals("requires_confirmation")) {
                     message = "Pagamento realizado com sucesso!";
@@ -50,10 +50,6 @@ public class Payments {
 
     public String getMessage() {
         return message;
-    }
-
-    public String getPaidEmployees() {
-        return paidEmployees;
     }
 }
 

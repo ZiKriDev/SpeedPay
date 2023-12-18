@@ -1,4 +1,4 @@
-package application.entities.screens.logic.buttons;
+package application.service;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +15,7 @@ import java.util.Locale;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -156,8 +157,10 @@ public class ImportSpreadsheet {
 
             while (cellIterator.hasNext()) {
                 Cell cell = cellIterator.next();
-                if (cell.getStringCellValue().equalsIgnoreCase(columnName)) {
-                    return cell.getColumnIndex();
+                if (cell.getCellType().equals(CellType.STRING)) {
+                    if (cell.getStringCellValue().equalsIgnoreCase(columnName)) {
+                        return cell.getColumnIndex();
+                    }
                 }
             }
 
@@ -168,10 +171,13 @@ public class ImportSpreadsheet {
 
     // Imprimir os dados da planilha obtidos pelos métodos auxiliares
     // 'searchColumn()',
-    // 'getEmployeesInSpreadsheet()', 'getSalaryInSpreadsheet()' e 'getIdAccountInSpreadsheet()' 
+    // 'getEmployeesInSpreadsheet()', 'getSalaryInSpreadsheet()' e
+    // 'getIdAccountInSpreadsheet()'
     // na tela em List View
     public static void printDataToListView(String filePath) {
         try {
+            resetData();
+
             Workbook workbook = WorkbookFactory.create(new FileInputStream(filePath));
             Sheet sheet = workbook.getSheetAt(0);
 
@@ -204,6 +210,8 @@ public class ImportSpreadsheet {
             }
 
             idAccount = getIdAccountInSpreadsheet(sheet, idAccountColumn);
+
+            workbook.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -219,13 +227,11 @@ public class ImportSpreadsheet {
 
         int cont = 0;
 
-        Connection conn = null;
+        Connection conn = DB.getConnection();;
         Statement st = null;
         ResultSet rs = null;
 
         try {
-            conn = DB.getConnection();
-
             st = conn.createStatement();
 
             rs = st.executeQuery("select * from employees");
@@ -248,6 +254,7 @@ public class ImportSpreadsheet {
         } finally {
             DB.closeResultSet(rs);
             DB.closeStatement(st);
+            DB.closeConnection(conn);
         }
 
         return employees;
@@ -259,7 +266,7 @@ public class ImportSpreadsheet {
         List<Employee> currentDataInDb = getCurrentDataFromDatabase();
         List<Employee> employees = new ArrayList<>();
 
-        Connection conn = null;
+        Connection conn = DB.getConnection();
         PreparedStatement st = null;
 
         try {
@@ -276,8 +283,6 @@ public class ImportSpreadsheet {
             checkAndRemoveDuplicateData(employees, currentDataInDb);
 
             if (employees.size() != 0) {
-                conn = DB.getConnection();
-
                 st = conn.prepareStatement(
                         "INSERT INTO employees "
                                 + "(name, id_account, salary) "
@@ -303,11 +308,12 @@ public class ImportSpreadsheet {
             e.printStackTrace();
         } finally {
             DB.closeStatement(st);
+            DB.closeConnection(conn);
         }
-
     }
 
-    // Checar se existe algum elemento da list1 que é igual a list2. Se houver, remove o elemento da list1
+    // Checar se existe algum elemento da list1 que é igual a list2. Se houver,
+    // remove o elemento da list1
     private static void checkAndRemoveDuplicateData(List<Employee> list1, List<Employee> list2) {
         Iterator<Employee> iterator = list1.iterator();
         List<Employee> currentDataInDb = getCurrentDataFromDatabase();
@@ -319,6 +325,15 @@ public class ImportSpreadsheet {
                 iterator.remove();
             }
         }
+    }
+
+    // Reiniciar as variáveis de estado. Utilizado em printDataToListView()
+    // antes de importar uma planilha
+    private static void resetData() {
+        message = null;
+        employeesName = new ArrayList<>();
+        salary = new ArrayList<>();
+        idAccount = new ArrayList<>();
     }
 
     // Pegar lista de nomes dos funcionários a serem cadastrados

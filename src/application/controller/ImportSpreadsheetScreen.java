@@ -6,39 +6,27 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
-import java.util.Optional;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
-import application.entities.screens.logic.buttons.ImportSpreadsheet;
+import application.service.ImportSpreadsheet;
 
 public class ImportSpreadsheetScreen extends Base {
 
     private String spreadsheetFilePath;
 
-    private boolean isPressedDialogPaneOkButton;
-
     private Screen screen;
-
-    @FXML
-    private VBox mainVBox;
-
+    
     @FXML
     private ListView<String> employeeListView;
 
@@ -61,13 +49,16 @@ public class ImportSpreadsheetScreen extends Base {
     private Button selectFile;
 
     @FXML
-    private ImageView switchToImportSpreadsheetScreen;
+    private Button registerData;
 
     @FXML
-    private ImageView switchToMainScreen;
+    private Pane switchToMainScreen;
 
     @FXML
-    private ImageView switchToPayoutScreen;
+    private Button switchToPayoutScreen;
+
+    @FXML
+    private Button switchToEmployeeScreen;
 
     private Stage stage;
 
@@ -84,16 +75,14 @@ public class ImportSpreadsheetScreen extends Base {
     @FXML
     private void initialize() {
         switchToMainScreen.setOnMouseClicked((event -> getScreen().showMainScreen()));
-        switchToImportSpreadsheetScreen.setOnMouseClicked((event -> getScreen().showImportSpreadsheetScreen()));
-        switchToPayoutScreen.setOnMouseClicked((event -> getScreen().showPayoutScreen()));
-
-        VBox.setVgrow(mainVBox, Priority.ALWAYS);
+        switchToPayoutScreen.setOnAction((event -> getScreen().showPayoutScreen()));
+        switchToEmployeeScreen.setOnAction((event -> getScreen().showEmployeeScreen()));
 
         selectFile.setOnAction(event -> openFileChooser());
         importSpreadsheet.setOnAction(this::onClickToImportSpreadsheet);
     }
 
-    // Método que é disparado quando o usuário clica no ImageView referente
+    // Método que é disparado quando o usuário clica no Pane referente
     // a tela principal. Executa o método da classe Screen
     // para mostrar a tela principal da aplicação
     @FXML
@@ -101,7 +90,7 @@ public class ImportSpreadsheetScreen extends Base {
         screen.showMainScreen();
     }
 
-    // Método que é disparado quando o usuário clica no ImageView referente
+    // Método que é disparado quando o usuário clica no botão referente
     // a tela de importar planilha. Executa o método da classe Screen
     // para mostrar a tela de importar planilha.
     @FXML
@@ -109,12 +98,20 @@ public class ImportSpreadsheetScreen extends Base {
         screen.showImportSpreadsheetScreen();
     }
 
-    // Método que é disparado quando o usuário clica no ImageView referente
+    // Método que é disparado quando o usuário clica no botão referente
     // a tela de pagamentos. Executa o método da classe Screen
     // para mostrar a tela de pagamentos.
     @FXML
     void showPayoutScreen(MouseEvent event) {
         screen.showPayoutScreen();
+    }
+
+    // Método que é disparado quando o usuário clica no botão referente
+    // a tela de funcionários. Executa o método da classe Screen
+    // para mostrar a tela de funcionários.
+    @FXML
+    void showEmployeeScreen(ActionEvent event) {
+        screen.showEmployeeScreen();
     }
 
     // Método que é disparado quando o botão de importar planilha é acionado.
@@ -124,31 +121,24 @@ public class ImportSpreadsheetScreen extends Base {
             boolean validFile = ImportSpreadsheet.existsFilePath(spreadsheetFilePath);
             boolean validSpreadsheet = validFile && ImportSpreadsheet.isSpreadsheet(spreadsheetFilePath);
             boolean validRowCount = validSpreadsheet && ImportSpreadsheet.countSpreadsheet(spreadsheetFilePath) > 0;
-    
+
             if (!validFile) {
-                showMessage("É necessário importar um arquivo!");
+                showMessage("É necessário importar um arquivo!", "RED");
             } else if (!validSpreadsheet) {
-                showMessage("O formato do arquivo deve ser planilha!");
+                showMessage("O formato do arquivo deve ser planilha!", "RED");
             } else if (!validRowCount) {
-                showMessage("O seu arquivo deve conter apenas uma planilha!");
+                showMessage("O seu arquivo deve conter apenas uma planilha!", "RED");
             } else {
                 ImportSpreadsheet.printDataToListView(spreadsheetFilePath);
-    
+
                 if (ImportSpreadsheet.getMessage() != null) {
-                    showMessage(ImportSpreadsheet.getMessage());
+                    showMessage(ImportSpreadsheet.getMessage(), "RED");
                 } else {
                     clearMessage();
-    
+
                     employeeListView.getItems().addAll(ImportSpreadsheet.getEmployeesNameList());
                     salaryListView.getItems().addAll(ImportSpreadsheet.getSalaryList());
                     idAccountListView.getItems().addAll(ImportSpreadsheet.getIdAccountList());
-    
-                    showDialogPane();
-    
-                    if (isPressedDialogPaneOkButton == true) {
-                        ImportSpreadsheet.setDataInDatabase();
-                        handleDatabaseMessage();
-                    }
                 }
             }
         } catch (InvalidFormatException e) {
@@ -156,10 +146,38 @@ public class ImportSpreadsheetScreen extends Base {
         }
     }
 
+    // Método que é disparado quando o botão de cadastrar dados é acionado.
+    @FXML
+    void onClickToRegisterData(ActionEvent event) {
+        ImportSpreadsheet.setDataInDatabase();
+        handleDatabaseMessage();
+    }
+
     // Mostrar texto do Label de mensagem
-    private void showMessage(String messageText) {
-        message.setAlignment(Pos.CENTER);
-        message.setText(messageText);
+    private void showMessage(String messageText, String color) {
+        if (color.equals("RED")) {
+            message.setStyle("-fx-text-fill: red;");
+            message.setAlignment(Pos.CENTER);
+            message.setText(messageText);
+
+            Timeline tl = new Timeline(
+                    new KeyFrame(Duration.seconds(3), e -> {
+                        clearMessage();
+                    }));
+
+            tl.play();
+        } else if (color.equals("GREEN")) {
+            message.setStyle("-fx-text-fill: green;");
+            message.setAlignment(Pos.CENTER);
+            message.setText(messageText);
+
+            Timeline tl = new Timeline(
+                    new KeyFrame(Duration.seconds(3), e -> {
+                        clearMessage();
+                    }));
+
+            tl.play();
+        }
     }
 
     // Limpar texto do Label de mensagem
@@ -168,23 +186,24 @@ public class ImportSpreadsheetScreen extends Base {
         message.setText("");
     }
 
-    // Mensagem retornada quando os dados da planilha são cadastrados no banco de dados
+    // Mensagem retornada quando os dados da planilha são cadastrados no banco de
+    // dados
     // com sucesso ou não
     private void handleDatabaseMessage() {
         String importMessage = ImportSpreadsheet.getMessage();
-    
+
         if ("Funcionários cadastrados com sucesso!".equals(importMessage) && message != null) {
             message.setStyle("-fx-text-fill: green;");
             message.setText("Funcionários cadastrados com sucesso!");
-    
+
             Timeline tl = new Timeline(
                     new KeyFrame(Duration.seconds(3), e -> {
                         message.setText("");
                     }));
-    
+
             tl.play();
         } else if ("Os funcionários dessa planilha já estão cadastrados!".equals(importMessage) && message != null) {
-            showMessage("Os funcionários dessa planilha já estão cadastrados!");
+            showMessage("Os funcionários dessa planilha já estão cadastrados!", "RED");
         }
     }
 
@@ -199,52 +218,6 @@ public class ImportSpreadsheetScreen extends Base {
         if (selectedFile != null) {
             spreadsheetFilePath = selectedFile.getAbsolutePath();
             pathFile.setText(spreadsheetFilePath);
-        } else {
-            spreadsheetFilePath = null;
-            pathFile.setText("");
         }
-    }
-
-    // Mostrar Dialog Pane com os dados extraídos da planilha
-    // para o usuário confirmar o cadastro dos funcionários no
-    // banco de dados
-    private void showDialogPane() {
-        employeeListView.setVisible(true);
-        salaryListView.setVisible(true);
-        idAccountListView.setVisible(true);
-
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Tem certeza que deseja cadastrar?");
-
-        DialogPane dialogPane = new DialogPane();
-
-        Label employeeHeader = new Label("Funcionários");
-        Label salaryHeader = new Label("Salário Líquido");
-        Label idAccountHeader = new Label("Chave Pix");
-
-        VBox vboxEmployeeListView = new VBox(5, employeeHeader, employeeListView);
-        VBox vboxIdAccountListView = new VBox(5, idAccountHeader, idAccountListView);
-        VBox vboxSalaryListView = new VBox(5, salaryHeader, salaryListView);
-
-        HBox content = new HBox(100, vboxEmployeeListView, vboxIdAccountListView, vboxSalaryListView);
-        dialogPane.setContent(content);
-
-        Button confirm = new Button("Confirmar");
-        confirm.setOnAction(event -> dialog.close());
-
-        dialogPane.getButtonTypes().add(ButtonType.CLOSE);
-        dialogPane.getButtonTypes().add(ButtonType.OK);
-
-        dialog.setDialogPane(dialogPane);
-
-        Optional<ButtonType> result = dialog.showAndWait();
-
-        result.ifPresent(buttonType -> {
-            if (buttonType == ButtonType.OK) {
-                isPressedDialogPaneOkButton = true;
-            } else {
-                isPressedDialogPaneOkButton = false;
-            }
-        });
     }
 }

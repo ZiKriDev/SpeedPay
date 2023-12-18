@@ -1,26 +1,21 @@
 package application.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.Button;
 
 public class MainScreen extends Base {
 
     private Screen screen;
 
     @FXML
-    private VBox mainVBox;
+    private Button switchToImportSpreadsheetScreen;
 
     @FXML
-    private ImageView switchToMainScreen;
+    private Button switchToPayoutScreen;
 
     @FXML
-    private ImageView switchToImportSpreadsheetScreen;
-
-    @FXML
-    private ImageView switchToPayoutScreen;
+    private Button switchToEmployeeScreen;
 
     public MainScreen() {
     }
@@ -31,25 +26,23 @@ public class MainScreen extends Base {
 
     @FXML
     private void initialize() {
-        switchToMainScreen.setOnMouseClicked((event -> getScreen().showMainScreen()));
-        switchToImportSpreadsheetScreen.setOnMouseClicked((event -> getScreen().showImportSpreadsheetScreen()));
-        switchToPayoutScreen.setOnMouseClicked((event -> getScreen().showPayoutScreen()));
-
-        VBox.setVgrow(mainVBox, Priority.ALWAYS);
+        switchToImportSpreadsheetScreen.setOnAction((event -> getScreen().showImportSpreadsheetScreen()));
+        switchToPayoutScreen.setOnAction((event -> getScreen().showPayoutScreen()));
+        switchToEmployeeScreen.setOnAction((event -> getScreen().showEmployeeScreen()));
     }
 
     @FXML
-    void showMainScreen(MouseEvent event) {
-        screen.showMainScreen();
-    }
-    
-    @FXML
-    void showImportSpreadsheetScreen(MouseEvent event) {
+    void showImportSpreadsheetScreen(ActionEvent event) {
         screen.showImportSpreadsheetScreen();
     }
 
     @FXML
-    void showPayoutScreen(MouseEvent event) {
+    void showPayoutScreen(ActionEvent event) {
         screen.showPayoutScreen();
+    }
+
+    @FXML
+    void showEmployeeScreen(ActionEvent event) {
+        screen.showEmployeeScreen();
     }
 }

@@ -4,7 +4,7 @@ O SpeedPay é um projeto acadêmico que consiste em uma aplicação desktop de a
 
 ## 🚀 Começando
 
-Para obter uma cópia do SpeedPay, faça o download do projeto. Em seguida, compile o projeto levando em consideração as suas dependências. Para isso, é sugerido a utilização de um gerenciador de dependências, como **[Maven](https://maven.apache.org/install.html)** ou **[Gradle](https://gradle.org/install/)**.
+Para obter uma cópia do SpeedPay, faça o download do projeto. Em seguida, compile-o levando em consideração as suas dependências. Para isso, é sugerido a utilização de um gerenciador de dependências, como **[Maven](https://maven.apache.org/install.html)** ou **[Gradle](https://gradle.org/install/)**. Além do mais, em ````application.service.Payments````, substitua o valor da chave Stripe pela que está disponível em seu painel.
 
 ### 📋 Pré-requisitos
 
@@ -42,7 +42,7 @@ Criando o **[banco de dados](http://twixar.me/LR6m)**:
 
 - No MySQL Workbench, selecione "File", e em seguida "Open SQL Script". Selecione o script SQL e o execute.
 ```
-Download da **[aplicação](https://www.mediafire.com/file/nun7xinsxpzb464/SpeedPay.rar/file)**:
+Download da **[aplicação](https://www.mediafire.com/file/lyipqnw5176rryv/SpeedPay-2.0.rar/file)**:
 
 ```
 - Faça o download da pasta da aplicação. No Windows, é recomendável que a pasta seja extraída em 
@@ -51,7 +51,7 @@ Download da **[aplicação](https://www.mediafire.com/file/nun7xinsxpzb464/Speed
 - Se desejar, crie um atalho na área de trabalho para o arquivo SpeedPay.exe.
 ```
 
-Clique em SpeedPay.exe para executar o programa.
+**OBSERVAÇÃO:** O executável disponível para download está utiizando uma chave Stripe de teste. Caso queira montar a sua própria aplicação, certifique-se de modificá-la antes de realizar a compilação. Você pode utilizar **[Launch4J](https://sourceforge.net/projects/launch4j/)** para construir um executável a partir de um arquivo jar.
 
 ## 🛠️ Construído com
 
@@ -70,6 +70,6 @@ Clique em SpeedPay.exe para executar o programa.
 
 ## 🎁 Agradecimentos
 
-* Agradecemos em especial a nossa professora da disciplina Programação Orientada a Objetos por nos desafiar a realizar esse projeto.
+* Agradecemos especialmente à nossa professora da disciplina de Programação Orientada a Objetos por nos desafiar a realizar este projeto.
 
 ---

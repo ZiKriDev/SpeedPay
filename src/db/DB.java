@@ -11,30 +11,24 @@ import java.sql.Statement;
 import java.util.Properties;
 
 public class DB {
-    private static Connection conn = null;
-
     // Gerar conexão com o banco de dados
     public static Connection getConnection() {
-        if (conn == null) {
-            try {
-                Properties props = loadProperties();
-                String url = props.getProperty("dburl");
-                conn = DriverManager.getConnection(url, props);
-            } catch (SQLException e) {
-                throw new DbException(e.getMessage());
-            }
+        try {
+            Properties props = loadProperties();
+            String url = props.getProperty("dburl");
+            return DriverManager.getConnection(url, props);
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
         }
-        return conn;
     }
 
     // Fechar conexão com o banco de dados
-    public static void closeConnection() {
+    public static void closeConnection(Connection conn) {
         if (conn != null) {
             try {
                 if (!conn.getAutoCommit()) {
                     conn.rollback();
                 }
-                
                 conn.close();
             } catch (SQLException e) {
                 throw new DbException(e.getMessage());
@@ -69,6 +63,7 @@ public class DB {
         }
     }
 
+    // Fechar ResultSet
     public static void closeResultSet(ResultSet rs) {
         if (rs != null) {
             try {

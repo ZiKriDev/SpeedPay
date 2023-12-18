@@ -12,17 +12,17 @@ public class Screen {
 
     private final Stage PRIMARY_STAGE;
     private final String TITLE = "SpeedPay";
-    private final int SCENE_WIDTH = 600;
-    private final int SCENE_HEIGHT = 400;
 
     public Screen(Stage primaryStage) {
         this.PRIMARY_STAGE = primaryStage;
     }
 
+    // Mostrar tela principal
     public void showMainScreen() {
         showScreen("/application/resources/screen/MainScreen.fxml", TITLE);
     }
 
+    // Mostrar tela de pagamentos
     public void showPayoutScreen() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(
@@ -33,14 +33,37 @@ public class Screen {
             payoutScreenController.setScreen(this);
             payoutScreenController.loadDatafromDatabase();
 
-            PRIMARY_STAGE.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT));
+            PRIMARY_STAGE.setScene(new Scene(root));
             PRIMARY_STAGE.setTitle(TITLE);
+
             PRIMARY_STAGE.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    // Mostrar tela de funcionários
+    public void showEmployeeScreen() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(
+                    getClass().getResource("/application/resources/screen/EmployeeScreen.fxml"));
+            Parent root = fxmlLoader.load();
+
+            EmployeeScreen employeeScreenController = fxmlLoader.getController();
+            employeeScreenController.setScreen(this);
+
+            employeeScreenController.loadDatafromDatabase();
+
+            PRIMARY_STAGE.setScene(new Scene(root));
+            PRIMARY_STAGE.setTitle(TITLE);
+
+            PRIMARY_STAGE.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Mostrar tela de importar template de planilha
     public void showImportSpreadsheetScreen() {
         showScreen("/application/resources/screen/ImportSpreadsheetScreen.fxml", TITLE);
     }
@@ -49,6 +72,8 @@ public class Screen {
         return PRIMARY_STAGE;
     }
 
+    // Mostrar tela. Utilizado para abrir telas que não exigem atualização no
+    // banco de dados antes da tela abrir
     private void showScreen(String fxmlFile, String title) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlFile));
@@ -57,11 +82,8 @@ public class Screen {
             Base baseController = fxmlLoader.getController();
             baseController.setScreen(this);
 
-            PRIMARY_STAGE.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT));
+            PRIMARY_STAGE.setScene(new Scene(root));
             PRIMARY_STAGE.setTitle(title);
-
-            PRIMARY_STAGE.setResizable(false);
-            PRIMARY_STAGE.setMaximized(false);
 
             PRIMARY_STAGE.getIcons().add(new Image(getClass().getResourceAsStream("/application/resources/images/iconapp.png")));
 

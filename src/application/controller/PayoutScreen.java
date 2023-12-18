@@ -1,7 +1,10 @@
 package application.controller;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -9,16 +12,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 
 import java.util.List;
 
 import application.entities.Employee;
-import application.entities.screens.logic.buttons.ImportSpreadsheet;
-import application.util.Payments;
+import application.service.ImportSpreadsheet;
+import application.service.Payments;
 
 public class PayoutScreen extends Base {
 
@@ -27,19 +29,16 @@ public class PayoutScreen extends Base {
     private ObservableList<Employee> employees;
 
     @FXML
-    private VBox mainVBox;
-    
-    @FXML
     private Label message;
 
     @FXML
-    private ImageView switchToMainScreen;
+    private Pane switchToMainScreen;
 
     @FXML
-    private ImageView switchToImportSpreadsheetScreen;
+    private Button switchToImportSpreadsheetScreen;
 
     @FXML
-    private ImageView switchToPayoutScreen;
+    private Button switchToEmployeeScreen;
 
     @FXML
     private TableView<Employee> tableView;
@@ -64,17 +63,15 @@ public class PayoutScreen extends Base {
     @FXML
     private void initialize() {
         switchToMainScreen.setOnMouseClicked((event -> getScreen().showMainScreen()));
-        switchToImportSpreadsheetScreen.setOnMouseClicked((event -> getScreen().showImportSpreadsheetScreen()));
-        switchToPayoutScreen.setOnMouseClicked((event -> getScreen().showPayoutScreen()));
-
-        VBox.setVgrow(mainVBox, Priority.ALWAYS);
+        switchToImportSpreadsheetScreen.setOnAction((event -> getScreen().showImportSpreadsheetScreen()));
+        switchToEmployeeScreen.setOnAction((event -> getScreen().showEmployeeScreen()));
 
         setupTable();
 
         nameColumn.setCellValueFactory(data -> data.getValue().nameProperty());
         salaryColumn.setCellValueFactory(data -> data.getValue().salaryProperty());
 
-        payout.setOnAction(event -> makePayment());
+        payout.setOnAction(this::makePayment);
     }
 
     @FXML
@@ -88,11 +85,11 @@ public class PayoutScreen extends Base {
     }
 
     @FXML
-    void showPayoutScreen(MouseEvent event) {
-        tableView.refresh();
-        screen.showPayoutScreen();
+    void showEmployeeScreen(ActionEvent event) {
+        screen.showEmployeeScreen();
     }
 
+    // Carregando dados do banco de dados
     public void loadDatafromDatabase() {
         List<Employee> employeeList = ImportSpreadsheet.getCurrentDataFromDatabase();
 
@@ -106,26 +103,60 @@ public class PayoutScreen extends Base {
         tableView.setItems(employees);
     }
 
+    // Configurando TableView
     private void setupTable() {
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
-    private void makePayment() {
+    // Acionado quando o botão de realizar pagamento é acionado
+    @FXML
+    void makePayment(ActionEvent event) {
         List<Employee> selectedEmployees = tableView.getSelectionModel().getSelectedItems();
 
         if (!selectedEmployees.isEmpty()) {
             Payments payments = new Payments();
             payments.doPayments(selectedEmployees);
 
-            showMessage(payments.getMessage());
+            if (payments.getMessage().equals("Pagamento realizado com sucesso!")) {
+                showMessage(payments.getMessage(), "GREEN");
+            } else {
+                showMessage(payments.getMessage(), "RED");
+            }
         } else {
-            showMessage("Nenhum funcionário foi selecionado para receber pagamentos!");
+            showMessage("Nenhum funcionário foi selecionado para receber pagamentos!", "RED");
         }
     }
 
-    private void showMessage(String messageText) {
+    // Mostrando mensagem na tela e, após 3 segundos, removê-la
+    private void showMessage(String messageText, String color) {
+        if (color.equals("RED")) {
+            message.setStyle("-fx-text-fill: red;");
+            message.setAlignment(Pos.CENTER);
+            message.setText(messageText);
+
+            Timeline tl = new Timeline(
+                    new KeyFrame(Duration.seconds(3), e -> {
+                        clearMessage();
+                    }));
+
+            tl.play();
+        } else if (color.equals("GREEN")) {
+            message.setStyle("-fx-text-fill: green;");
+            message.setAlignment(Pos.CENTER);
+            message.setText(messageText);
+
+            Timeline tl = new Timeline(
+                    new KeyFrame(Duration.seconds(3), e -> {
+                        clearMessage();
+                    }));
+
+            tl.play();
+        }
+    }
+
+    // Limpando mensagem
+    private void clearMessage() {
         message.setAlignment(Pos.CENTER);
-        message.setText(messageText);
+        message.setText("");
     }
 }
-
